@@ -1,7 +1,7 @@
 import { Inngest } from "inngest";
 import { connectDB } from "./db.js";
 import { User } from "../models/user.model.js"; // Import the User model
-// import { addUserToPublicChannels, deleteStreamUser, upsertStreamUser } from "./stream.js";
+import { addUserToPublicChannels, deleteStreamUser, upsertStreamUser } from "./stream.js";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "slack-clone" });
@@ -25,11 +25,11 @@ const syncUser = inngest.createFunction(
       await User.create(newUser);
 
       // TODO: Implement Stream.io integration
-      // await upsertStreamUser({
-      //   id: newUser.clerkId.toString(),
-      //   name: newUser.name,
-      //   image: newUser.image,
-      // });
+      await upsertStreamUser({
+        id: newUser.clerkId.toString(),
+        name: newUser.name,
+        image: newUser.image,
+      });
 
       // await addUserToPublicChannels(newUser.clerkId.toString());
     } catch (error) {
@@ -48,7 +48,7 @@ const deleteUserFromDB = inngest.createFunction(
       const { id } = event.data;
       await User.deleteOne({ clerkId: id });
 
-      // await deleteStreamUser(id.toString());
+      await deleteStreamUser(id.toString());
     } catch (error) {
       console.error("Error in deleteUserFromDB function:", error);
       throw error;
