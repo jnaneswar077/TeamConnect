@@ -22,21 +22,35 @@ app.get('/', (req, res) => {
 
 
 
-const startServer = async () => {
+// Initialize database connection
+const initDB = async () => {
+  try {
+    await connectDB();
+    console.log("Database connected successfully");
+  } catch (error) {
+    console.error("Error connecting to database:", error);
+  }
+};
+
+// Start server only in development
+if (ENV.NODE_ENV !== "production") {
+  const startServer = async () => {
     try {
-      await connectDB();
-      if (ENV.NODE_ENV !== "production") {
-        app.listen(ENV.PORT, () => {
-          console.log("Server started on port:", ENV.PORT);
-        });
-      }
+      await initDB();
+      app.listen(ENV.PORT, () => {
+        console.log("Server started on port:", ENV.PORT);
+      });
     } catch (error) {
       console.error("Error starting server:", error);
-      process.exit(1); // Exit the process with a failure code
+      process.exit(1);
     }
   };
   
   startServer();
+} else {
+  // In production (Vercel), just initialize DB
+  initDB();
+}
 
 
-    export default app;
+export default app;
