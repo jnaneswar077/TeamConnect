@@ -20,6 +20,15 @@ app.get('/', (req, res) => {
     res.send('Hello World');
 });
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ 
+        status: 'OK', 
+        timestamp: new Date().toISOString(),
+        environment: ENV.NODE_ENV 
+    });
+});
+
 
 
 // Initialize database connection
@@ -29,6 +38,12 @@ const initDB = async () => {
     console.log("Database connected successfully");
   } catch (error) {
     console.error("Error connecting to database:", error);
+    // In production, don't crash the function, just log the error
+    if (ENV.NODE_ENV === "production") {
+      console.error("Database connection failed, but continuing without DB");
+    } else {
+      throw error;
+    }
   }
 };
 
@@ -48,8 +63,10 @@ if (ENV.NODE_ENV !== "production") {
   
   startServer();
 } else {
-  // In production (Vercel), just initialize DB
-  initDB();
+  // In production (Vercel), initialize DB but don't crash on failure
+  initDB().catch(error => {
+    console.error("Failed to initialize database:", error);
+  });
 }
 
 
