@@ -9,6 +9,7 @@ import { clerkMiddleware } from '@clerk/express';
 import { inngest, functions } from './config/inngest.js';
 import { serve } from 'inngest/express';
 import chatRoutes from "./routes/chat.route.js";
+import cors from "cors";
 
 
 dotenv.config();
@@ -18,6 +19,11 @@ const app = express();
 
 
 app.use(express.json());
+app.use(cors({ 
+  origin: ['http://localhost:5173', 'http://localhost:3000'], 
+  credentials: true 
+}));
+
 app.use(clerkMiddleware());//req.auth is available in the request object
 
 
