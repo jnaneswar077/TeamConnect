@@ -31,6 +31,9 @@ const syncUser = inngest.createFunction(
         image: newUser.image,
       });
 
+      await addUserToPublicChannels(newUser.clerkId.toString());
+
+
       // await addUserToPublicChannels(newUser.clerkId.toString());
     } catch (error) {
       console.error("Error in syncUser function:", error);
