@@ -33,7 +33,7 @@ if (!PUBLISHABLE_KEY) {
 }
 
 Sentry.init({
-  dsn: "https://4f47bb738e85e490aa85949fea979879@o4509967880945664.ingest.de.sentry.io/4509972318781520",
+  dsn: import.meta.env.VITE_SENTRY_DSN,
   integrations: [
     Sentry.browserTracingIntegration(),
   ],

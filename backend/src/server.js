@@ -20,7 +20,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({ 
-  origin: ['http://localhost:5173', 'http://localhost:3000'], 
+  origin: ENV.CLIENT_URL, 
   credentials: true 
 }));
 
